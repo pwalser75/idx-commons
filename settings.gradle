@@ -1,0 +1,10 @@
+rootProject.name = 'idx-commons'
+include ':persistence-api'
+include ':persistence-testbase'
+include ':util-caching'
+include ':ws-client-util'
+
+project(':persistence-api').projectDir = "$rootDir/persistence-api" as File
+project(':persistence-testbase').projectDir = "$rootDir/persistence-testbase" as File
+project(':util-caching').projectDir = "$rootDir/util-caching" as File
+project(':ws-client-util').projectDir = "$rootDir/ws-client-util" as File
