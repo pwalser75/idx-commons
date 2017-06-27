@@ -1,0 +1,13 @@
+description = 'Persistence Test Base'
+dependencies {
+    compile libraries.testbase
+    compile libraries.hibernate
+    compile libraries.hsqldb
+    compile libraries.deltaspike
+    compile libraries.jee
+    compile libraries.testbase
+    compile libraries.loggingAPI
+    compile libraries.loggingImpl
+    testCompile libraries.persistenceJPA
+    testCompile libraries.springDataJPA
+}

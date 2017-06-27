@@ -1,7 +1,7 @@
 .gradle/
-persistence-api/build/
-persistence-testbase/build/
-util-caching/build/classes/java/main/idx/util/caching/GenericCacheProducer.class
-util-caching/build/classes/java/test/ehcache.xml
-util-caching/build/
-ws-client-util/build/
+.idea/
+out/
+persistence-jpa/build/
+jee-testbase/build/
+caching-util/build/
+webservice-client-util/build/

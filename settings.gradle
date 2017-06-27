@@ -1,10 +1,10 @@
 rootProject.name = 'idx-commons'
-include ':persistence-api'
-include ':persistence-testbase'
-include ':util-caching'
-include ':ws-client-util'
+include ':persistence-jpa'
+include ':jee-testbase'
+include ':caching-util'
+include ':webservice-client-util'
 
-project(':persistence-api').projectDir = "$rootDir/persistence-api" as File
-project(':persistence-testbase').projectDir = "$rootDir/persistence-testbase" as File
-project(':util-caching').projectDir = "$rootDir/util-caching" as File
-project(':ws-client-util').projectDir = "$rootDir/ws-client-util" as File
+project(':persistence-jpa').projectDir = "$rootDir/persistence-jpa" as File
+project(':jee-testbase').projectDir = "$rootDir/jee-testbase" as File
+project(':caching-util').projectDir = "$rootDir/caching-util" as File
+project(':webservice-client-util').projectDir = "$rootDir/webservice-client-util" as File
