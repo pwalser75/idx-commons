@@ -68,52 +68,55 @@ subprojects {
 		archives javadocJar, sourcesJar
 	}
 	
-	signing {
-		sign configurations.archives
-	}
+	if(project.hasProperty('release')){
 	
-	uploadArchives {
-	  repositories {
-		mavenDeployer {
-		  beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+		signing {
+			sign configurations.archives
+		}
+	
+		uploadArchives {
+		  repositories {
+			mavenDeployer {
+			  beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-		  repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-			authentication(userName: ossrhUsername, password: ossrhPassword)
-		  }
-
-		  snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-			authentication(userName: ossrhUsername, password: ossrhPassword)
-		  }
-
-		  pom.project {
-			name 'Idx Commons'
-			packaging 'jar'
-			description 'Idx Commons is a collection of general-purpose base libraries.'
-			url 'https://github.com/pwalser75/idx-commons'
-
-			scm {
-			  connection 'scm:svn:http://foo.googlecode.com/svn/trunk/'
-			  developerConnection 'scm:svn:https://foo.googlecode.com/svn/trunk/'
-			  url 'http://foo.googlecode.com/svn/trunk/'
-			}
-
-			licenses {
-			  license {
-				name 'The Apache License, Version 2.0'
-				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			  repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
 			  }
-			}
 
-			developers {
-			  developer {
-				id 'pwalser'
-				name 'Peter Walser'
-				email 'pwalser@frostnova.ch'
+			  snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			  }
+
+			  pom.project {
+				name 'Idx Commons'
+				packaging 'jar'
+				description 'Idx Commons is a collection of general-purpose base libraries.'
+				url 'https://github.com/pwalser75/idx-commons'
+
+				scm {
+				  connection 'scm:svn:http://foo.googlecode.com/svn/trunk/'
+				  developerConnection 'scm:svn:https://foo.googlecode.com/svn/trunk/'
+				  url 'http://foo.googlecode.com/svn/trunk/'
+				}
+
+				licenses {
+				  license {
+					name 'The Apache License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+				  }
+				}
+
+				developers {
+				  developer {
+					id 'pwalser'
+					name 'Peter Walser'
+					email 'pwalser@frostnova.ch'
+				  }
+				}
 			  }
 			}
 		  }
 		}
-	  }
 	}
 }
 
