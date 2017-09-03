@@ -1,9 +1,11 @@
 rootProject.name = 'idx-commons'
+include ':check'
 include ':persistence-jpa'
 include ':jee-testbase'
 include ':caching-util'
 include ':webservice-client-util'
 
+project(':check').projectDir = "$rootDir/check" as File
 project(':persistence-jpa').projectDir = "$rootDir/persistence-jpa" as File
 project(':jee-testbase').projectDir = "$rootDir/jee-testbase" as File
 project(':caching-util').projectDir = "$rootDir/caching-util" as File

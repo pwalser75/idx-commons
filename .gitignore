@@ -1,6 +1,7 @@
 .gradle/
 .idea/
 out/
+check/build/
 persistence-jpa/build/
 jee-testbase/build/
 caching-util/build/

@@ -1,0 +1,5 @@
+description = 'Check Util'
+
+dependencies {
+    testCompile libraries.testbase
+}
