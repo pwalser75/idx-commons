@@ -23,7 +23,9 @@ public final class Check {
      * @param value         value to be checked
      * @param parameterName parameter name of the value (will be included in the error message)
      * @param validators    optional validators which perform checks on the value (only called when the value is not
-     *                      null).
+     *                      null), and throw any {@link Exception} (will be converted to an {@link
+     *                      IllegalArgumentException}
+     *                      with the same message) when the validation fails.
      * @param <T>           value type
      * @return value that was passed.
      */
@@ -41,7 +43,9 @@ public final class Check {
      * @param value         value to be checked
      * @param parameterName parameter name of the value (will be included in the error message)
      * @param validators    optional validators which perform checks on the value (only called when the value is not
-     *                      null).
+     *                      null), and throw any {@link Exception} (will be converted to an {@link
+     *                      IllegalArgumentException}
+     *                      with the same message) when the validation fails.
      * @param <T>           value type
      * @return value that was passed.
      */
@@ -64,6 +68,6 @@ public final class Check {
     }
 
     private static String name(String parameterName) {
-        return parameterName != null ? parameterName : "value";
+        return parameterName != null ? "'" + parameterName + "'" : "value";
     }
 }

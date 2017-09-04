@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Test for {@link Check} util
@@ -21,6 +22,12 @@ public class CheckTest {
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains(parameterName));
+        }
+        try {
+            Check.required(null, null);
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            Assert.assertTrue(ex.getMessage().contains("value"));
         }
     }
 
@@ -45,5 +52,22 @@ public class CheckTest {
     public void checkOptionalValueMissing() {
         Integer value = Check.optional(null, "test");
         Assert.assertNull(value);
+    }
+
+    public static <T> void checkOk(T value, Consumer<? super T>... validators) {
+        String parameterName = UUID.randomUUID().toString();
+        T result = Check.required(value, parameterName, validators);
+        Assert.assertEquals(value, result);
+    }
+
+    public static <T> void checkFail(T value, Consumer<? super T>... validators) {
+        String parameterName = UUID.randomUUID().toString();
+        try {
+            Check.required(value, parameterName, validators);
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            System.out.println(value + " => " + ex.getMessage());
+            Assert.assertTrue(ex.getMessage().contains("'" + parameterName + "'"));
+        }
     }
 }
