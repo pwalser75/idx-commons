@@ -1,0 +1,51 @@
+=========================================
+ idx commons - how to release
+=========================================
+
+Sonatype JIRA ticket:
+https://issues.sonatype.org/browse/OSSRH-32727
+
+Releasing instructions:
+http://central.sonatype.org/pages/releasing-the-deployment.html
+
+A) Releasing snapshot versions
+
+   Release the snapshot artefacts (signed archives and Javadoc) to the snapshot repository:
+
+   gradle -Prelease uploadArchives
+   
+   The snapshot versions will then appear under
+   https://oss.sonatype.org/content/repositories/snapshots/ch/frostnova/
+   
+   
+A) Releasing versions
+
+1. Change the project version (build.gradle) to a release. Naming conventions:
+	- beta versions: 'a.b.c-BETA-n'
+	- release candidates: 'a.b.c-RC-n'
+	- final versions: 'a.b.c' or 'a.b.c-FINAL'
+   
+2. Release the snapshot artefacts (signed archives and Javadoc):
+
+   gradle -Prelease uploadArchives
+   
+   Afterwards, change the project version (build.gradle) back to a SNAPSHOT version.
+   
+3. Login to Nexus
+   https://oss.sonatype.org
+   
+4. Within Nexus, select 'Build Promotion' > 'Staging Repositories'
+   In the list, select your repository (group id + number, e.g. 'chfrostnova-1001')
+   Check the content of the repository (versions, contents).
+   
+5. Close the repository (action in the toolbar in Nexus).
+   This will trigger the checks on the repository to be performed
+   (see http://central.sonatype.org/pages/requirements.html) and will take some time.
+   You can track the closing activity under the 'Activity' tab, where you will also see the 
+   individual steps, and in the end 'Repository closed'.
+   
+6. If the checks fail (or you don't want to release anyway), 'Drop' the repository (action in the toolbar).
+   This will remove the staging repository without releasing.
+   
+7. If the checks are ok, you can 'Release' the staging repository (action in the toolbar).
+   This will move the artefacts to the release repository, where it will be synched with the centeral repository.
