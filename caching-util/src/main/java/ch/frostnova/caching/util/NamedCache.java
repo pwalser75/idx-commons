@@ -1,4 +1,4 @@
-package idx.util.caching;
+package ch.frostnova.caching.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

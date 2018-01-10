@@ -2,7 +2,7 @@ buildscript {
     repositories { jcenter() }
 
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
 
@@ -29,11 +29,11 @@ subprojects {
 		mavenLocal()
 		mavenCentral()
     }
+	sourceSets {
+		main { output.resourcesDir = output.classesDir }
+		test { output.resourcesDir = output.classesDir }
+	}
 
-    sourceSets {
-        main { output.resourcesDir = output.classesDir }
-        test { output.resourcesDir = output.classesDir }
-    }
     jar { duplicatesStrategy = 'exclude' }
 
     compileJava.options.encoding = 'UTF-8'
@@ -53,7 +53,7 @@ subprojects {
             )
         }
     }
-	
+
 	task javadocJar(type: Jar) {
 		classifier = 'javadoc'
 		from javadoc
@@ -63,17 +63,17 @@ subprojects {
 		classifier = 'sources'
 		from sourceSets.main.allSource
 	}
-	
+
 	artifacts {
 		archives javadocJar, sourcesJar
 	}
-	
+
 	if(project.hasProperty('release')){
-	
+
 		signing {
 			sign configurations.archives
 		}
-	
+
 		uploadArchives {
 		  repositories {
 			mavenDeployer {
@@ -142,7 +142,7 @@ ext.libraries = [
 		wsClientUtil  : "ch.frostnova:webservice-client-util:1.0.0-RC1",
 		testbase     : [
                 "junit:junit:4.12",
-                "org.mockito:mockito-core:2.8.47"
+                "org.mockito:mockito-core:2.13.0"
         ],
         loggingAPI   : [
                 "org.slf4j:slf4j-api:1.7.25"
@@ -153,37 +153,37 @@ ext.libraries = [
                 "ch.qos.logback:logback-classic:1.2.3"
         ],
         deltaspike   : [
-                "org.apache.deltaspike.core:deltaspike-core-api:1.8.0",
-                "org.apache.deltaspike.core:deltaspike-core-impl:1.8.0",
-                "org.apache.deltaspike.modules:deltaspike-test-control-module-api:1.8.0",
-                "org.apache.deltaspike.modules:deltaspike-test-control-module-impl:1.8.0",
-                "org.apache.deltaspike.cdictrl:deltaspike-cdictrl-weld:1.8.0",
-                "org.apache.deltaspike.modules:deltaspike-jpa-module-api:1.8.0",
-                "org.apache.deltaspike.modules:deltaspike-jpa-module-impl:1.8.0",
-                "org.jboss.weld.se:weld-se-core:2.4.4.Final"
+                "org.apache.deltaspike.core:deltaspike-core-api:1.8.1",
+                "org.apache.deltaspike.core:deltaspike-core-impl:1.8.1",
+                "org.apache.deltaspike.modules:deltaspike-test-control-module-api:1.8.1",
+                "org.apache.deltaspike.modules:deltaspike-test-control-module-impl:1.8.1",
+                "org.apache.deltaspike.cdictrl:deltaspike-cdictrl-weld:1.8.1",
+                "org.apache.deltaspike.modules:deltaspike-jpa-module-api:1.8.1",
+                "org.apache.deltaspike.modules:deltaspike-jpa-module-impl:1.8.1",
+                "org.jboss.weld.se:weld-se-core:2.4.6.Final"
         ],
-        springDataJPA: "org.springframework.data:spring-data-jpa:1.11.4.RELEASE",
+        springDataJPA: "org.springframework.data:spring-data-jpa:2.0.2.RELEASE",
         hibernate    : [
-                dependencies.create("org.hibernate:hibernate-core:5.2.10.Final") {
+                dependencies.create("org.hibernate:hibernate-core:5.2.12.Final") {
                     exclude module: "dom4j"
                 },
-                "org.hibernate:hibernate-entitymanager:5.2.10.Final"
+                "org.hibernate:hibernate-entitymanager:5.2.12.Final"
         ],
         hsqldb       : "org.hsqldb:hsqldb:2.4.0",
         jcache       : [
-                "javax.cache:cache-api:1.0.0",
-                dependencies.create("org.jsr107.ri:cache-annotations-ri-cdi:1.0.0") {
+                "javax.cache:cache-api:1.1.0",
+                dependencies.create("org.jsr107.ri:cache-annotations-ri-cdi:1.1.0") {
                     exclude module: "cdi-api"
                 },
-                "org.ehcache:ehcache:3.3.1"
+                "org.ehcache:ehcache:3.4.0"
         ],
         jaxb         : [
                 "com.fasterxml.jackson.core:jackson-databind:2.8.5",
                 "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.5"
         ],
         jaxrs        : [
-                "org.glassfish.jersey.core:jersey-client:2.25",
-                "org.glassfish.jersey.media:jersey-media-json-jackson:2.25"
+                "org.glassfish.jersey.core:jersey-client:2.26",
+                "org.glassfish.jersey.media:jersey-media-json-jackson:2.26"
         ],
         guava        : "com.google.guava:guava:20.0"
 ]

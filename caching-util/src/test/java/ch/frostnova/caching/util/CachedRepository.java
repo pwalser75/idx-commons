@@ -1,4 +1,4 @@
-package idx.util.caching;
+package ch.frostnova.caching.util;
 
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;

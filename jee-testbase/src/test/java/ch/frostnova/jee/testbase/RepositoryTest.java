@@ -48,7 +48,8 @@ public class RepositoryTest {
         long version = created.getVersion();
 
         // read
-        PersonEntity read = tx.execute(() -> repository.findOne(person.getId()));
+        PersonEntity read = tx.execute(() -> repository.findById(person.getId())).orElse(null);
+        Assert.assertNotNull(read);
         Assert.assertEquals("Peter", read.getFirstName());
         Assert.assertEquals("Walser", read.getLastName());
         Assert.assertEquals(Gender.MALE, read.getGender());
@@ -66,8 +67,8 @@ public class RepositoryTest {
         Assert.assertFalse(updated.getLastUpdatedOn().isAfter(afterUpdate));
 
         // delete
-        repository.delete(updated.getId());
-        PersonEntity deleted = repository.findOne(person.getId());
+        repository.deleteById(updated.getId());
+        PersonEntity deleted = repository.findById(person.getId()).orElse(null);
         Assert.assertNull(deleted);
     }
 }

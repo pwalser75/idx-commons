@@ -1,0 +1,37 @@
+
+------------------------------------------------------------
+: Project Dependency Updates (report to plain text file)
+------------------------------------------------------------
+
+The following dependencies are using the latest milestone version:
+ - org.jsr107.ri:cache-annotations-ri-cdi:1.1.0
+ - javax.cache:cache-api:1.1.0
+ - org.apache.deltaspike.cdictrl:deltaspike-cdictrl-weld:1.8.1
+ - org.apache.deltaspike.core:deltaspike-core-api:1.8.1
+ - org.apache.deltaspike.core:deltaspike-core-impl:1.8.1
+ - org.apache.deltaspike.modules:deltaspike-jpa-module-api:1.8.1
+ - org.apache.deltaspike.modules:deltaspike-jpa-module-impl:1.8.1
+ - org.apache.deltaspike.modules:deltaspike-test-control-module-api:1.8.1
+ - org.apache.deltaspike.modules:deltaspike-test-control-module-impl:1.8.1
+ - org.ehcache:ehcache:3.4.0
+ - com.github.ben-manes:gradle-versions-plugin:0.17.0
+ - org.hibernate:hibernate-core:5.2.12.Final
+ - org.hibernate:hibernate-entitymanager:5.2.12.Final
+ - org.hsqldb:hsqldb:2.4.0
+ - org.slf4j:jcl-over-slf4j:1.7.25
+ - org.glassfish.jersey.core:jersey-client:2.26
+ - org.glassfish.jersey.media:jersey-media-json-jackson:2.26
+ - org.slf4j:jul-to-slf4j:1.7.25
+ - junit:junit:4.12
+ - ch.qos.logback:logback-classic:1.2.3
+ - org.mockito:mockito-core:2.13.0
+ - org.slf4j:slf4j-api:1.7.25
+ - org.springframework.data:spring-data-jpa:2.0.2.RELEASE
+ - org.jboss.weld.se:weld-se-core:3.0.2.Final
+
+The following dependencies have later milestone versions:
+ - javax:javaee-api [7.0 -> 8.0]
+
+Failed to determine the latest version for the following dependencies (use --info for details):
+ - ch.frostnova:jee-testbase
+ - ch.frostnova:persistence-jpa

@@ -1,4 +1,4 @@
-package idx.util.caching;
+package ch.frostnova.caching.util;
 
 
 import org.slf4j.Logger;
