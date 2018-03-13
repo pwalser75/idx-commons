@@ -22,12 +22,7 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> notEmpty() {
-
-        return value -> {
-            if (value.isEmpty()) {
-                throw new IllegalArgumentException("must not be empty");
-            }
-        };
+        return Check.with(c -> !c.isEmpty(), "must not be empty");
     }
 
     /**
@@ -36,12 +31,7 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> noNullElements() {
-
-        return value -> {
-            if (value.stream().anyMatch(Objects::isNull)) {
-                throw new IllegalArgumentException("must not contain null elements");
-            }
-        };
+        return Check.with(c -> !c.stream().anyMatch(Objects::isNull), "must not be empty");
     }
 
     /**
@@ -51,12 +41,7 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> min(int min) {
-
-        return value -> {
-            if (value.size() < min) {
-                throw new IllegalArgumentException("must have at least " + min + " elements");
-            }
-        };
+        return Check.with(v -> v.size() >= min, "must have at least " + min + " elements");
     }
 
     /**
@@ -66,11 +51,6 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> max(int max) {
-
-        return value -> {
-            if (value.size() > max) {
-                throw new IllegalArgumentException("must have no more than " + max + " elements");
-            }
-        };
+        return Check.with(v -> v.size() <= max, "must have no more than " + max + " elements");
     }
 }

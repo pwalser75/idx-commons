@@ -10,29 +10,28 @@ apply plugin: 'com.github.ben-manes.versions'
 
 
 allprojects {
-	defaultTasks 'clean', 'build', 'install'
+    defaultTasks 'clean', 'build', 'install'
 }
 
 subprojects {
-	apply plugin: 'maven'
-	apply plugin: 'signing'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
     apply plugin: 'java'
 
     group = 'ch.frostnova'
-    version = '1.0.0-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     repositories {
         jcenter()
-		mavenLocal()
-		mavenCentral()
+        mavenLocal()
+        mavenCentral()
     }
-	sourceSets {
-		main { output.resourcesDir = output.classesDir }
-		test { output.resourcesDir = output.classesDir }
-	}
+    sourceSets {
+        main { output.resourcesDir = output.classesDir }
+        test { output.resourcesDir = output.classesDir }
+    }
 
     jar { duplicatesStrategy = 'exclude' }
 
@@ -54,70 +53,70 @@ subprojects {
         }
     }
 
-	task javadocJar(type: Jar) {
-		classifier = 'javadoc'
-		from javadoc
-	}
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
 
-	task sourcesJar(type: Jar) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 
-	artifacts {
-		archives javadocJar, sourcesJar
-	}
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
 
-	if(project.hasProperty('release')){
+    if (project.hasProperty('release')) {
 
-		signing {
-			sign configurations.archives
-		}
+        signing {
+            sign configurations.archives
+        }
 
-		uploadArchives {
-		  repositories {
-			mavenDeployer {
-			  beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-			  repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-				authentication(userName: ossrhUsername, password: ossrhPassword)
-			  }
+                    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
 
-			  snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-				authentication(userName: ossrhUsername, password: ossrhPassword)
-			  }
+                    snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
 
-			  pom.project {
-				name 'Idx Commons'
-				packaging 'jar'
-				description 'Idx Commons is a collection of general-purpose base libraries.'
-				url 'https://github.com/pwalser75/idx-commons'
+                    pom.project {
+                        name 'Idx Commons'
+                        packaging 'jar'
+                        description 'Idx Commons is a collection of general-purpose base libs.'
+                        url 'https://github.com/pwalser75/idx-commons'
 
-				scm {
-				  connection 'scm:svn:http://foo.googlecode.com/svn/trunk/'
-				  developerConnection 'scm:svn:https://foo.googlecode.com/svn/trunk/'
-				  url 'http://foo.googlecode.com/svn/trunk/'
-				}
+                        scm {
+                            connection 'scm:svn:http://foo.googlecode.com/svn/trunk/'
+                            developerConnection 'scm:svn:https://foo.googlecode.com/svn/trunk/'
+                            url 'http://foo.googlecode.com/svn/trunk/'
+                        }
 
-				licenses {
-				  license {
-					name 'The Apache License, Version 2.0'
-					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-				  }
-				}
+                        licenses {
+                            license {
+                                name 'The Apache License, Version 2.0'
+                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            }
+                        }
 
-				developers {
-				  developer {
-					id 'pwalser'
-					name 'Peter Walser'
-					email 'pwalser@frostnova.ch'
-				  }
-				}
-			  }
-			}
-		  }
-		}
-	}
+                        developers {
+                            developer {
+                                id 'pwalser'
+                                name 'Peter Walser'
+                                email 'pwalser@frostnova.ch'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -134,25 +133,25 @@ dependencyUpdates.resolutionStrategy = {
     }
 }
 
-ext.libraries = [
-        jee          : "javax:javaee-api:7.0",
-		persistenceJPA: "ch.frostnova:persistence-jpa:1.0.0-RC1",
-		jeeTestbase   : "ch.frostnova:jee-testbase:1.0.0-RC1",
-		cachingUtil   : "ch.frostnova:util-caching:1.0.0-RC1",
-		wsClientUtil  : "ch.frostnova:webservice-client-util:1.0.0-RC1",
-		testbase     : [
+ext.libs = [
+        jee           : "javax:javaee-api:7.0",
+        persistenceJPA: "ch.frostnova:persistence-jpa:1.0.0-RC1",
+        jeeTestbase   : "ch.frostnova:jee-testbase:1.0.0-RC1",
+        cachingUtil   : "ch.frostnova:util-caching:1.0.0-RC1",
+        wsClientUtil  : "ch.frostnova:webservice-client-util:1.0.0-RC1",
+        testbase      : [
                 "junit:junit:4.12",
                 "org.mockito:mockito-core:2.13.0"
         ],
-        loggingAPI   : [
+        loggingAPI    : [
                 "org.slf4j:slf4j-api:1.7.25"
         ],
-        loggingImpl  : [
+        loggingImpl   : [
                 "org.slf4j:jcl-over-slf4j:1.7.25",
                 "org.slf4j:jul-to-slf4j:1.7.25",
                 "ch.qos.logback:logback-classic:1.2.3"
         ],
-        deltaspike   : [
+        deltaspike    : [
                 "org.apache.deltaspike.core:deltaspike-core-api:1.8.1",
                 "org.apache.deltaspike.core:deltaspike-core-impl:1.8.1",
                 "org.apache.deltaspike.modules:deltaspike-test-control-module-api:1.8.1",
@@ -162,28 +161,28 @@ ext.libraries = [
                 "org.apache.deltaspike.modules:deltaspike-jpa-module-impl:1.8.1",
                 "org.jboss.weld.se:weld-se-core:2.4.6.Final"
         ],
-        springDataJPA: "org.springframework.data:spring-data-jpa:2.0.2.RELEASE",
-        hibernate    : [
+        springDataJPA : "org.springframework.data:spring-data-jpa:2.0.2.RELEASE",
+        hibernate     : [
                 dependencies.create("org.hibernate:hibernate-core:5.2.12.Final") {
                     exclude module: "dom4j"
                 },
                 "org.hibernate:hibernate-entitymanager:5.2.12.Final"
         ],
-        hsqldb       : "org.hsqldb:hsqldb:2.4.0",
-        jcache       : [
+        hsqldb        : "org.hsqldb:hsqldb:2.4.0",
+        jcache        : [
                 "javax.cache:cache-api:1.1.0",
                 dependencies.create("org.jsr107.ri:cache-annotations-ri-cdi:1.1.0") {
                     exclude module: "cdi-api"
                 },
                 "org.ehcache:ehcache:3.4.0"
         ],
-        jaxb         : [
+        jaxb          : [
                 "com.fasterxml.jackson.core:jackson-databind:2.8.5",
                 "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.5"
         ],
-        jaxrs        : [
+        jaxrs         : [
                 "org.glassfish.jersey.core:jersey-client:2.26",
                 "org.glassfish.jersey.media:jersey-media-json-jackson:2.26"
         ],
-        guava        : "com.google.guava:guava:20.0"
+        guava         : "com.google.guava:guava:20.0"
 ]

@@ -7,6 +7,7 @@ import java.util.concurrent.*;
 
 /**
  * Test implementation of a {@link ManagedExecutorService}.
+ *
  * @author pwalser
  * @since 27.05.2016.
  */

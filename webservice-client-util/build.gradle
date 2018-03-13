@@ -1,5 +1,5 @@
 description = 'WebServie Client Util'
 dependencies {
-    compile libraries.jaxrs
-    testCompile libraries.testbase
+    compile libs.jaxrs
+    testCompile libs.testbase
 }

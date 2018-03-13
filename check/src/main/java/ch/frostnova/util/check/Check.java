@@ -1,6 +1,8 @@
 package ch.frostnova.util.check;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Check class for argument validation.
@@ -12,6 +14,20 @@ public final class Check {
 
     private Check() {
         // static access only
+    }
+
+    public static <T> Consumer<T> with(Predicate<? super T> predicate, Function<T, String> errorMessageProducer) {
+        Check.required(predicate, "predicate");
+        Check.required(errorMessageProducer, "error message producer");
+        return value -> {
+            if (!predicate.test(value)) {
+                throw new IllegalArgumentException(errorMessageProducer.apply(value));
+            }
+        };
+    }
+
+    public static <T> Consumer<T> with(Predicate<? super T> predicate, String errorMessage) {
+        return with(predicate, value -> errorMessage);
     }
 
     /**
@@ -60,7 +76,7 @@ public final class Check {
                     validator.accept(value);
                 } catch (Exception ex) {
                     String message = ex.getMessage() != null ? ex.getMessage() : "unknown reason";
-                    throw new IllegalArgumentException(name(parameterName) + ": " + message);
+                    throw new IllegalArgumentException(name(parameterName) + " " + message);
                 }
             }
         }

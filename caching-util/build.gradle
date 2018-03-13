@@ -1,8 +1,8 @@
 description = 'Caching Util'
 dependencies {
-    compileOnly libraries.jee
-    compile libraries.jcache
-    compile libraries.loggingAPI
-    testCompile libraries.jeeTestbase
-    testCompile libraries.testbase
+    compileOnly libs.jee
+    compile libs.jcache
+    compile libs.loggingAPI
+    testCompile libs.jeeTestbase
+    testCompile libs.testbase
 }

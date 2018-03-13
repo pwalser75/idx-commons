@@ -3,8 +3,11 @@ package ch.frostnova.util.check;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Test for {@link Check} util
@@ -40,6 +43,70 @@ public class CheckTest {
     @Test(expected = IllegalArgumentException.class)
     public void checkRequiredValueMissing() {
         Check.required(null, "test");
+    }
+
+    @Test
+    public void checkWithPredicate1() {
+
+        Predicate<String> hasUppercaseLetters = s -> s.chars().anyMatch(Character::isUpperCase);
+        Predicate<String> hasLowercaseLetters = s -> s.chars().anyMatch(Character::isLowerCase);
+        Predicate<String> hasDigits = s -> s.chars().anyMatch(Character::isDigit);
+        Predicate<String> passwordRule = hasUppercaseLetters.and(hasLowercaseLetters.and(hasDigits));
+        String message = "must contain lower/uppercase characters and digits";
+
+        Check.required("ThePassword123", "password", Check.with(passwordRule, message), CheckString.min(6));
+
+        try {
+            Check.required("foo", "password", Check.with(passwordRule, message), CheckString.min(6));
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            Assert.assertTrue(ex.getMessage().contains(message));
+        }
+    }
+
+    @Test
+    public void checkWithPredicate2() {
+
+        Check.required(1234, "number",
+                Check.with(i -> (i.intValue() & 1) == 0, "must be even"));
+
+        try {
+            Check.required(5555, "number",
+                    Check.with(i -> (i.intValue() & 1) == 0, "must be even"));
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            Assert.assertTrue(ex.getMessage().contains("must be even"));
+        }
+    }
+
+    @Test
+    public void checkWithPredicateAndDynamicFunction1() {
+
+        Check.required(LocalDate.of(1975, 12, 20), "date",
+                Check.with(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
+
+        try {
+            Check.required(LocalDate.of(2020, 2, 20), "date",
+                    Check.with(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            Assert.assertTrue(ex.getMessage().contains("2020-02-20 is not a saturday"));
+        }
+    }
+
+    @Test
+    public void checkWithPredicateAndDynamicFunction2() {
+
+        Check.required(1234, "number",
+                Check.with(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
+
+        try {
+            Check.required(5555, "number",
+                    Check.with(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            Assert.assertTrue(ex.getMessage().contains("5555 must be even"));
+        }
     }
 
     @Test

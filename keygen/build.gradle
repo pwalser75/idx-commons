@@ -1,0 +1,13 @@
+description = 'Key Generator'
+dependencies {
+    testCompile libs.testbase
+    compile project(':check')
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": "ch.frostnova.keygen.KeyGenerator"
+        )
+    }
+}
