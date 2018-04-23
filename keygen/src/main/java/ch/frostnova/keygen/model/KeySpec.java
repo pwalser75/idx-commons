@@ -1,5 +1,6 @@
 package ch.frostnova.keygen.model;
 
+import ch.frostnova.keygen.alphabet.Alphabet;
 import ch.frostnova.util.check.Check;
 import ch.frostnova.util.check.CheckNumber;
 import ch.frostnova.util.check.CheckString;
@@ -16,11 +17,12 @@ public final class KeySpec {
     private final static Pattern PATTERN = Pattern.compile("\\s*([A-Za-z]+)\\s*([0-9]+)\\s*([A-Za-z]+)\\s*");
 
     private final KeyType type;
+    private final Alphabet alphabet;
     private final int length;
     private final KeyLengthUnit unit;
 
     /**
-     * Creates a new OPT specification
+     * Creates a new key specification
      *
      * @param type    type, required
      * @param length, required, must be &gt; 0
@@ -29,6 +31,22 @@ public final class KeySpec {
     public KeySpec(KeyType type, int length, KeyLengthUnit unit) {
 
         this.type = Check.required(type, "type");
+        this.length = Check.required(length, "length", CheckNumber.min(1));
+        this.unit = Check.required(unit, "unit");
+        this.alphabet = type.getAlphabet();
+    }
+
+    /**
+     * Creates a new key specification
+     *
+     * @param alphabet alphabet, required
+     * @param length,  required, must be &gt; 0
+     * @param unit     unit, required
+     */
+    public KeySpec(Alphabet alphabet, int length, KeyLengthUnit unit) {
+
+        this.type = null;
+        this.alphabet = Check.required(alphabet, "alphabet");
         this.length = Check.required(length, "length", CheckNumber.min(1));
         this.unit = Check.required(unit, "unit");
     }
@@ -44,6 +62,7 @@ public final class KeySpec {
             type = KeyType.parse(matcher.group(1));
             length = Integer.parseInt(matcher.group(2));
             unit = KeyLengthUnit.parse(matcher.group(3));
+            alphabet = type.getAlphabet();
         } catch (NoSuchElementException ex) {
             throw new IllegalArgumentException("Unsupported specification: " + specification + ": " + ex.getMessage());
         }
@@ -51,6 +70,10 @@ public final class KeySpec {
 
     public KeyType getType() {
         return type;
+    }
+
+    public Alphabet getAlphabet() {
+        return alphabet;
     }
 
     public int getLength() {
@@ -66,7 +89,7 @@ public final class KeySpec {
             return length * 8;
         }
         if (unit == KeyLengthUnit.Chars) {
-            return (int) (Math.log(Math.pow(type.getAlphabet().length(), length)) / Math.log(2));
+            return (int) (Math.log(Math.pow(getAlphabet().length(), length)) / Math.log(2));
         }
         throw new IllegalStateException("Unsuported key length unit");
     }
@@ -77,6 +100,6 @@ public final class KeySpec {
 
     @Override
     public String toString() {
-        return type.name() + length + unit.name();
+        return (type != null ? type.name() : "Custom") + length + unit.name();
     }
 }

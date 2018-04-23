@@ -58,7 +58,7 @@ public final class KeyGenerator {
         Check.required(spec, "OTP specification");
         Check.required(random, "random");
 
-        Alphabet alphabet = spec.getType().getAlphabet();
+        Alphabet alphabet = spec.getAlphabet();
         AlphabetCodec codec = new AlphabetCodec(alphabet);
 
         if (spec.getUnit() == KeyLengthUnit.Bits) {

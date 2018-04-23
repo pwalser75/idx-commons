@@ -19,9 +19,11 @@ public class KeyGeneratorTest {
     @Test
     public void testOutput() {
         for (String s : Arrays.asList("Numeric6Chars", "alphanumeric 32 chars", "AlphaNumeric 256 bits",
+                "UppercaseAlphaNumeric 25 chars", "LowercaseAlphaNumeric 64 bit",
                 "Hexadecimal 5BYTES", "SaveAlphaNumeric20byte", "verySaveAlphaNumeric60bit")) {
             KeySpec keySpec = new KeySpec(s);
             System.out.println(keySpec + ": " + KeyGenerator.generate(keySpec));
+            System.out.println("- " + keySpec.getStrengthInBits() + " bits strength");
         }
     }
 

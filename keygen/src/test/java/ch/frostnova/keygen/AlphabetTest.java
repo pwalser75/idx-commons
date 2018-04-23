@@ -1,7 +1,12 @@
 package ch.frostnova.keygen;
 
 import ch.frostnova.keygen.alphabet.Alphabet;
-import ch.frostnova.keygen.alphabet.impl.*;
+import ch.frostnova.keygen.alphabet.impl.AlphanumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.HexadecimalAlphabet;
+import ch.frostnova.keygen.alphabet.impl.NumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.PredefinedAlphabet;
+import ch.frostnova.keygen.alphabet.impl.SaveAlphanumericAlphabet;
+import ch.frostnova.keygen.model.KeyType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,6 +19,14 @@ import java.util.NoSuchElementException;
  * @since 20.02.2017
  */
 public class AlphabetTest {
+
+    @Test
+    public void testKeyTypeAlphabets() {
+
+        for (KeyType keyType : KeyType.values()) {
+            testAlphabet(keyType.getAlphabet());
+        }
+    }
 
     @Test
     public void testDigitsAlphabet() {

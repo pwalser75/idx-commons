@@ -1,5 +1,7 @@
 package ch.frostnova.keygen;
 
+import ch.frostnova.keygen.alphabet.Alphabet;
+import ch.frostnova.keygen.alphabet.impl.PredefinedAlphabet;
 import ch.frostnova.keygen.model.KeyLengthUnit;
 import ch.frostnova.keygen.model.KeySpec;
 import ch.frostnova.keygen.model.KeyType;
@@ -15,7 +17,12 @@ public class KeySpecTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testMissingType() {
-        new KeySpec(null, 123, KeyLengthUnit.Bits);
+        new KeySpec((KeyType) null, 123, KeyLengthUnit.Bits);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMissingAlphabet() {
+        new KeySpec((Alphabet) null, 123, KeyLengthUnit.Bits);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -35,10 +42,23 @@ public class KeySpecTest {
 
     @Test
     public void testValid() {
-        KeySpec KeySpec = new KeySpec(KeyType.Numeric, 123, KeyLengthUnit.Bits);
-        Assert.assertEquals(KeyType.Numeric, KeySpec.getType());
-        Assert.assertEquals(123, KeySpec.getLength());
-        Assert.assertEquals(KeyLengthUnit.Bits, KeySpec.getUnit());
+        KeySpec keySpec = new KeySpec(KeyType.Numeric, 123, KeyLengthUnit.Bits);
+        Assert.assertEquals(KeyType.Numeric, keySpec.getType());
+        Assert.assertEquals(123, keySpec.getLength());
+        Assert.assertEquals(KeyLengthUnit.Bits, keySpec.getUnit());
+        Assert.assertNotNull(keySpec.getAlphabet());
+        Assert.assertEquals(123, keySpec.getStrengthInBits());
+    }
+
+    @Test
+    public void testValidCustomAlphabet() {
+        Alphabet alphabet = new PredefinedAlphabet("ABCabc123");
+        KeySpec keySpec = new KeySpec(alphabet, 123, KeyLengthUnit.Chars);
+        Assert.assertNull(keySpec.getType());
+        Assert.assertNotNull(keySpec.getAlphabet());
+        Assert.assertEquals(123, keySpec.getLength());
+        Assert.assertEquals(KeyLengthUnit.Chars, keySpec.getUnit());
+        Assert.assertEquals(389, keySpec.getStrengthInBits());
     }
 
     @Test

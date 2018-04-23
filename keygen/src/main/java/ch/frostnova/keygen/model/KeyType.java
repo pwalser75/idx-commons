@@ -1,7 +1,13 @@
 package ch.frostnova.keygen.model;
 
 import ch.frostnova.keygen.alphabet.Alphabet;
-import ch.frostnova.keygen.alphabet.impl.*;
+import ch.frostnova.keygen.alphabet.impl.AlphanumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.HexadecimalAlphabet;
+import ch.frostnova.keygen.alphabet.impl.LowercaseAlphanumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.NumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.SaveAlphanumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.UppercaseAlphanumericAlphabet;
+import ch.frostnova.keygen.alphabet.impl.VerySaveAlphanumericAlphabet;
 import ch.frostnova.util.check.Check;
 import ch.frostnova.util.check.CheckString;
 
@@ -21,6 +27,16 @@ public enum KeyType {
      * Key type: alpha-numeric, from '0'-'9', 'A'-'Z', 'a'-'z'
      */
     AlphaNumeric(new AlphanumericAlphabet()),
+
+    /**
+     * Key type: alpha-numeric, from '0'-'9', 'A'-'Z'
+     */
+    UppercaseAlphaNumeric(new UppercaseAlphanumericAlphabet()),
+
+    /**
+     * Key type: alpha-numeric, from '0'-'9', 'a'-'z'
+     */
+    LowercaseAlphaNumeric(new LowercaseAlphanumericAlphabet()),
 
     /**
      * Key type: hexadecimal, from '0'-'9', 'A'-'F'
