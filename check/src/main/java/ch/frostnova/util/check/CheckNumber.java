@@ -93,9 +93,19 @@ public final class CheckNumber {
      * @return validator
      */
     public static Consumer<Number> lessThan(Number n) {
+        if (isNaN(n) || isPositiveInfinity(n)) {
+            return value -> {
+            };
+        }
+        if (isNegativeInfinity(n)) {
+            return value -> {
+                throw new IllegalArgumentException("must be smaller than " + n + " (which it can't be, sorry)");
+            };
+        }
+
         return value -> {
-            if (n != null && new BigDecimal(value.toString()).compareTo(new BigDecimal(n.toString())) <= 0) {
-                throw new IllegalArgumentException("must be less than " + n);
+            if (n != null && !isNegativeInfinity(value) && !isNaN(value) && (isPositiveInfinity(value) || new BigDecimal(value.toString()).compareTo(new BigDecimal(n.toString())) >= 0)) {
+                throw new IllegalArgumentException("must be smaller than " + n);
             }
         };
     }
@@ -107,8 +117,18 @@ public final class CheckNumber {
      * @return validator
      */
     public static Consumer<Number> greaterThan(Number n) {
+        if (isNaN(n) || isNegativeInfinity(n)) {
+            return value -> {
+            };
+        }
+        if (isPositiveInfinity(n)) {
+            return value -> {
+                throw new IllegalArgumentException("must be greater than " + n + " (which it can't be, sorry)");
+            };
+        }
+
         return value -> {
-            if (n != null && new BigDecimal(value.toString()).compareTo(new BigDecimal(n.toString())) <= 0) {
+            if (n != null && !isPositiveInfinity(value) && !isNaN(value) && (isNegativeInfinity(value) || new BigDecimal(value.toString()).compareTo(new BigDecimal(n.toString())) <= 0)) {
                 throw new IllegalArgumentException("must be greater than " + n);
             }
         };

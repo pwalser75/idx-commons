@@ -3,6 +3,7 @@ package ch.frostnova.util.check;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.stream.IntStream;
 
 import static ch.frostnova.util.check.CheckNumber.*;
 
@@ -14,13 +15,7 @@ import static ch.frostnova.util.check.CheckNumber.*;
  */
 public class CheckNumberTest {
 
-    @Test
-    public void foo() {
-
-        System.out.println("a: " + Double.isInfinite(Double.POSITIVE_INFINITY));
-        System.out.println("b: " + Double.isInfinite(Double.NEGATIVE_INFINITY));
-        System.out.println("b: " + (Double.NEGATIVE_INFINITY == Double.NEGATIVE_INFINITY));
-    }
+    private final int MONTE_CARLO_SAMPLES = 100;
 
     @Test
     public void checkFinite() {
@@ -59,88 +54,135 @@ public class CheckNumberTest {
 
     @Test
     public void checkMin() {
+        IntStream.range(0, MONTE_CARLO_SAMPLES).forEach(i ->
+                RandomUtil.randomNumberSuppliers().forEach(s -> {
 
-        RandomUtil.randomNumberSuppliers().forEach(s -> {
+                    Number a = s.get();
+                    Number b = s.get();
+                    if (new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString())) > 0) {
+                        Number temp = a;
+                        a = b;
+                        b = temp;
+                    }
+                    CheckTest.checkOk(a, min(a));
+                    CheckTest.checkOk(b, min(a));
 
-            Number a = s.get();
-            Number b = s.get();
-            if (new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString())) > 0) {
-                Number temp = a;
-                a = b;
-                b = temp;
-            }
-            CheckTest.checkOk(a, min(a));
-            CheckTest.checkOk(b, min(a));
+                    Number n = s.get();
+                    CheckTest.checkOk(n, min(Float.NEGATIVE_INFINITY));
+                    CheckTest.checkOk(n, min(Float.NaN));
+                    CheckTest.checkOk(n, min(Double.NEGATIVE_INFINITY));
+                    CheckTest.checkOk(n, min(Double.NaN));
+                    CheckTest.checkOk(Float.POSITIVE_INFINITY, min(n));
+                    CheckTest.checkOk(Double.POSITIVE_INFINITY, min(n));
+                    CheckTest.checkOk(Float.NaN, min(n));
+                    CheckTest.checkOk(Double.NaN, min(n));
 
-            Number n = s.get();
-            CheckTest.checkOk(n, min(Float.NEGATIVE_INFINITY));
-            CheckTest.checkOk(n, min(Float.NaN));
-            CheckTest.checkOk(n, min(Double.NEGATIVE_INFINITY));
-            CheckTest.checkOk(n, min(Double.NaN));
-            CheckTest.checkOk(Float.POSITIVE_INFINITY, min(n));
-            CheckTest.checkOk(Double.POSITIVE_INFINITY, min(n));
-            CheckTest.checkOk(Float.NaN, min(n));
-            CheckTest.checkOk(Double.NaN, min(n));
-
-            CheckTest.checkFail(n, min(Float.POSITIVE_INFINITY));
-            CheckTest.checkFail(n, min(Double.POSITIVE_INFINITY));
-            CheckTest.checkFail(Float.NEGATIVE_INFINITY, min(n));
-            CheckTest.checkFail(Double.NEGATIVE_INFINITY, min(n));
-        });
+                    CheckTest.checkFail(n, min(Float.POSITIVE_INFINITY));
+                    CheckTest.checkFail(n, min(Double.POSITIVE_INFINITY));
+                    CheckTest.checkFail(Float.NEGATIVE_INFINITY, min(n));
+                    CheckTest.checkFail(Double.NEGATIVE_INFINITY, min(n));
+                }));
     }
 
     @Test
     public void checkMax() {
-        RandomUtil.randomNumberSuppliers().forEach(s -> {
+        IntStream.range(0, MONTE_CARLO_SAMPLES).forEach(i ->
+                RandomUtil.randomNumberSuppliers().forEach(s -> {
 
-            Number a = s.get();
-            Number b = s.get();
-            if (new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString())) > 0) {
-                Number temp = a;
-                a = b;
-                b = temp;
-            }
-            CheckTest.checkOk(a, max(a));
-            CheckTest.checkOk(a, max(b));
+                    Number a = s.get();
+                    Number b = s.get();
+                    if (new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString())) > 0) {
+                        Number temp = a;
+                        a = b;
+                        b = temp;
+                    }
+                    CheckTest.checkOk(a, max(a));
+                    CheckTest.checkOk(a, max(b));
 
-            Number n = s.get();
-            CheckTest.checkOk(n, max(Float.POSITIVE_INFINITY));
-            CheckTest.checkOk(n, max(Double.POSITIVE_INFINITY));
-            CheckTest.checkOk(Float.NEGATIVE_INFINITY, max(n));
-            CheckTest.checkOk(Float.NaN, max(n));
-            CheckTest.checkOk(Double.NEGATIVE_INFINITY, max(n));
-            CheckTest.checkOk(Double.NaN, max(n));
-            CheckTest.checkOk(Float.NaN, max(n));
-            CheckTest.checkOk(Double.NaN, max(n));
+                    Number n = s.get();
+                    CheckTest.checkOk(n, max(Float.POSITIVE_INFINITY));
+                    CheckTest.checkOk(n, max(Double.POSITIVE_INFINITY));
+                    CheckTest.checkOk(Float.NEGATIVE_INFINITY, max(n));
+                    CheckTest.checkOk(Float.NaN, max(n));
+                    CheckTest.checkOk(Double.NEGATIVE_INFINITY, max(n));
+                    CheckTest.checkOk(Double.NaN, max(n));
+                    CheckTest.checkOk(Float.NaN, max(n));
+                    CheckTest.checkOk(Double.NaN, max(n));
 
-            CheckTest.checkFail(n, max(Float.NEGATIVE_INFINITY));
-            CheckTest.checkFail(n, max(Double.NEGATIVE_INFINITY));
-            CheckTest.checkFail(Float.POSITIVE_INFINITY, max(n));
-            CheckTest.checkFail(Double.POSITIVE_INFINITY, max(n));
-        });
+                    CheckTest.checkFail(n, max(Float.NEGATIVE_INFINITY));
+                    CheckTest.checkFail(n, max(Double.NEGATIVE_INFINITY));
+                    CheckTest.checkFail(Float.POSITIVE_INFINITY, max(n));
+                    CheckTest.checkFail(Double.POSITIVE_INFINITY, max(n));
+                }));
     }
 
     @Test
     public void checkLessThan() {
-        CheckTest.checkFail(5d, lessThan(5));
+        IntStream.range(0, MONTE_CARLO_SAMPLES).forEach(i ->
+                RandomUtil.randomNumberSuppliers().forEach(s -> {
 
-        CheckTest.checkOk(5.32, lessThan(5));
-        CheckTest.checkFail(-20, lessThan(-15));
+                    Number a = s.get();
+                    Number b = s.get();
+                    int compare = new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString()));
+                    if (compare > 0) {
+                        Number temp = a;
+                        a = b;
+                        b = temp;
+                    }
+                    CheckTest.checkFail(a, lessThan(a));
+                    if (compare != 0) {
+                        CheckTest.checkOk(a, lessThan(b));
+                    }
+
+                    Number n = s.get();
+                    CheckTest.checkOk(n, lessThan(Float.POSITIVE_INFINITY));
+                    CheckTest.checkOk(n, lessThan(Double.POSITIVE_INFINITY));
+                    CheckTest.checkOk(Float.NEGATIVE_INFINITY, lessThan(n));
+                    CheckTest.checkOk(Float.NaN, lessThan(n));
+                    CheckTest.checkOk(Double.NEGATIVE_INFINITY, lessThan(n));
+                    CheckTest.checkOk(Double.NaN, lessThan(n));
+                    CheckTest.checkOk(Float.NaN, lessThan(n));
+                    CheckTest.checkOk(Double.NaN, lessThan(n));
+
+                    CheckTest.checkFail(n, lessThan(Float.NEGATIVE_INFINITY));
+                    CheckTest.checkFail(n, lessThan(Double.NEGATIVE_INFINITY));
+                    CheckTest.checkFail(Float.POSITIVE_INFINITY, lessThan(n));
+                    CheckTest.checkFail(Double.POSITIVE_INFINITY, lessThan(n));
+                }));
     }
 
     @Test
     public void checkGreaterThan() {
-        CheckTest.checkFail(5d, greaterThan(5));
+        IntStream.range(0, MONTE_CARLO_SAMPLES).forEach(i ->
+                RandomUtil.randomNumberSuppliers().forEach(s -> {
 
-        CheckTest.checkOk(199, greaterThan(10));
-        CheckTest.checkFail(-99, greaterThan(-5));
-    }
+                    Number a = s.get();
+                    Number b = s.get();
+                    int compare = new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString()));
+                    if (compare > 0) {
+                        Number temp = a;
+                        a = b;
+                        b = temp;
+                    }
+                    CheckTest.checkFail(a, greaterThan(a));
+                    if (compare != 0) {
+                        CheckTest.checkOk(b, greaterThan(a));
+                    }
 
-    private final static BigDecimal minOf(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) <= 0 ? a : b;
-    }
+                    Number n = s.get();
+                    CheckTest.checkOk(n, greaterThan(Float.NEGATIVE_INFINITY));
+                    CheckTest.checkOk(n, greaterThan(Float.NaN));
+                    CheckTest.checkOk(n, greaterThan(Double.NEGATIVE_INFINITY));
+                    CheckTest.checkOk(n, greaterThan(Double.NaN));
+                    CheckTest.checkOk(Float.POSITIVE_INFINITY, greaterThan(n));
+                    CheckTest.checkOk(Double.POSITIVE_INFINITY, greaterThan(n));
+                    CheckTest.checkOk(Float.NaN, greaterThan(n));
+                    CheckTest.checkOk(Double.NaN, greaterThan(n));
 
-    private final static BigDecimal maxOf(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) >= 0 ? a : b;
+                    CheckTest.checkFail(n, greaterThan(Float.POSITIVE_INFINITY));
+                    CheckTest.checkFail(n, greaterThan(Double.POSITIVE_INFINITY));
+                    CheckTest.checkFail(Float.NEGATIVE_INFINITY, greaterThan(n));
+                    CheckTest.checkFail(Double.NEGATIVE_INFINITY, greaterThan(n));
+                }));
     }
 }

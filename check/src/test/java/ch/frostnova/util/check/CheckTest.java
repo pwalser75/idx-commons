@@ -123,13 +123,9 @@ public class CheckTest {
 
     public static <T> void checkOk(T value, Consumer<? super T>... validators) {
         String parameterName = "Test value: " + value;
-        try {
-            T result = Check.required(value, parameterName, validators);
-            Assert.assertEquals(value, result);
-        } catch (IllegalArgumentException ex) {
-            System.out.println(ex.getMessage());
-            throw ex;
-        }
+        T result = Check.required(value, parameterName, validators);
+        Assert.assertEquals(value, result);
+
     }
 
     public static <T> void checkFail(T value, Consumer<? super T>... validators) {
@@ -138,7 +134,6 @@ public class CheckTest {
             Check.required(value, parameterName, validators);
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
-            System.out.println(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("'" + parameterName + "'"));
         }
     }
