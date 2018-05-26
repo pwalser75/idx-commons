@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -19,6 +20,7 @@ public class CheckTest {
 
     @Test
     public void checkErrorMessageContainsParameterName() {
+
         String parameterName = UUID.randomUUID().toString();
         try {
             Check.required(null, parameterName);
@@ -43,6 +45,20 @@ public class CheckTest {
     @Test(expected = IllegalArgumentException.class)
     public void checkRequiredValueMissing() {
         Check.required(null, "test");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void customCheckWithConsumer() {
+
+        ZonedDateTime date = ZonedDateTime.now().minusWeeks(1);
+
+        Consumer<ZonedDateTime> futureDate = d -> {
+            if (!d.isAfter(ZonedDateTime.now())) {
+                throw new IllegalArgumentException("must be in the future");
+            }
+        };
+
+        Check.required(date, "execution date", futureDate);
     }
 
     @Test

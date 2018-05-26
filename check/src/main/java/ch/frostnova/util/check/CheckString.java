@@ -50,6 +50,16 @@ public final class CheckString {
      * @param pattern pattern specifying the string's format
      * @return validator
      */
+    public static Consumer<String> format(String pattern) {
+        return format(Pattern.compile(pattern));
+    }
+
+    /**
+     * Check that the string's format matches the given pattern
+     *
+     * @param pattern pattern specifying the string's format
+     * @return validator
+     */
     public static Consumer<String> format(Pattern pattern) {
         return format(pattern, null);
     }
@@ -74,6 +84,17 @@ public final class CheckString {
                 throw new IllegalArgumentException(builder.toString());
             }
         };
+    }
+
+    /**
+     * Check that the string's format matches the given pattern
+     *
+     * @param pattern pattern specifying the string's format
+     * @param hint    hint describing the pattern
+     * @return validator
+     */
+    public static Consumer<String> format(String pattern, String hint) {
+        return format(Pattern.compile(pattern), hint);
     }
 
     /**

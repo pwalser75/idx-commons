@@ -33,8 +33,30 @@ public class CheckStringTest {
     }
 
     @Test
+    public void checkStringFormat() {
+        final String format = "\\w+-[0-9]+";
+        CheckTest.checkOk("Test-123", format(format));
+        CheckTest.checkOk("K-2", format(format));
+        CheckTest.checkFail("123-Test", format(format));
+        CheckTest.checkFail("Foo", format(format));
+        CheckTest.checkFail("x=123", format(format));
+    }
+
+    @Test
     public void checkFormatWithHint() {
         final Pattern format = Pattern.compile("[0-9]{4}-[0-1][0-9]?-[0-3][0-9]?");
+        String hint = "expected: yyyy-MM-dd";
+
+        CheckTest.checkOk("1975-12-20", format(format, hint));
+        CheckTest.checkOk("2017-09-04", format(format, hint));
+        CheckTest.checkFail("5555", format(format, hint));
+        CheckTest.checkFail("Foo", format(format, hint));
+        CheckTest.checkFail("2000-47-99", format(format, hint));
+    }
+
+    @Test
+    public void checkStringFormatWithHint() {
+        final String format = "[0-9]{4}-[0-1][0-9]?-[0-3][0-9]?";
         String hint = "expected: yyyy-MM-dd";
 
         CheckTest.checkOk("1975-12-20", format(format, hint));
