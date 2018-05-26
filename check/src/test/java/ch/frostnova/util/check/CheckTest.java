@@ -7,7 +7,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -52,7 +51,7 @@ public class CheckTest {
 
         ZonedDateTime date = ZonedDateTime.now().minusWeeks(1);
 
-        Consumer<ZonedDateTime> futureDate = d -> {
+        Verifier<ZonedDateTime> futureDate = d -> {
             if (!d.isAfter(ZonedDateTime.now())) {
                 throw new IllegalArgumentException("must be in the future");
             }
@@ -70,10 +69,10 @@ public class CheckTest {
         Predicate<String> passwordRule = hasUppercaseLetters.and(hasLowercaseLetters.and(hasDigits));
         String message = "must contain lower/uppercase characters and digits";
 
-        Check.required("ThePassword123", "password", Check.is(passwordRule, message), CheckString.min(6));
+        Check.required("ThePassword123", "password", Check.that(passwordRule, message), CheckString.min(6));
 
         try {
-            Check.required("foo", "password", Check.is(passwordRule, message), CheckString.min(6));
+            Check.required("foo", "password", Check.that(passwordRule, message), CheckString.min(6));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains(message));
@@ -84,11 +83,11 @@ public class CheckTest {
     public void checkWithPredicate2() {
 
         Check.required(1234, "number",
-                Check.is(i -> (i.intValue() & 1) == 0, "must be even"));
+                Check.that(i -> (i & 1) == 0, "must be even"));
 
         try {
             Check.required(5555, "number",
-                    Check.is(i -> (i.intValue() & 1) == 0, "must be even"));
+                    Check.that(i -> (i & 1) == 0, "must be even"));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains("must be even"));
@@ -99,11 +98,11 @@ public class CheckTest {
     public void checkWithPredicateAndDynamicFunction1() {
 
         Check.required(LocalDate.of(1975, 12, 20), "date",
-                Check.is(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
+                Check.that(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " that not a saturday"));
 
         try {
             Check.required(LocalDate.of(2020, 2, 20), "date",
-                    Check.is(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
+                    Check.that(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains("2020-02-20 is not a saturday"));
@@ -114,11 +113,11 @@ public class CheckTest {
     public void checkWithPredicateAndDynamicFunction2() {
 
         Check.required(1234, "number",
-                Check.is(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
+                Check.that(i -> (i & 1) == 0, v -> v + " must be even"));
 
         try {
             Check.required(5555, "number",
-                    Check.is(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
+                    Check.that(i -> (i & 1) == 0, v -> v + " must be even"));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains("5555 must be even"));
@@ -137,14 +136,14 @@ public class CheckTest {
         Assert.assertNull(value);
     }
 
-    public static <T> void checkOk(T value, Consumer<? super T>... validators) {
+    public static <T> void checkOk(T value, Verifier<? super T>... validators) {
         String parameterName = "Test value: " + value;
         T result = Check.required(value, parameterName, validators);
         Assert.assertEquals(value, result);
 
     }
 
-    public static <T> void checkFail(T value, Consumer<? super T>... validators) {
+    public static <T> void checkFail(T value, Verifier<? super T>... validators) {
         String parameterName = "Test value: " + value;
         try {
             Check.required(value, parameterName, validators);

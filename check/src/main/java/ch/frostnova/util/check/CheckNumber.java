@@ -1,10 +1,27 @@
 package ch.frostnova.util.check;
 
 import java.math.BigDecimal;
-import java.util.function.Consumer;
+import java.math.BigInteger;
 
 /**
- * Utility methods to perform checks on numbers
+ * Utility methods to perform checks on {@link Number} values. <br>
+ * All {@link Number} types are supported:
+ * <ul>
+ * <li>{@link Byte}</li>
+ * <li>{@link Short}</li>
+ * <li>{@link Integer}</li>
+ * <li>{@link Long}</li>
+ * <li>{@link Float}</li>
+ * <li>{@link Double}</li>
+ * <li>{@link BigInteger}</li>
+ * <li>{@link BigDecimal}</li>
+ * </ul>
+ * All edge cases are supported as well:
+ * <ul>
+ * <li><code>Float.NaN</code> and <code>Double.NaN</code></li>
+ * <li><code>Float.POSITIVE_INFINITY</code> and <code>Double.POSITIVE_INFINITY</code></li>
+ * <li><code>Float.NEGATIVE_INFINITY</code> and <code>Double.NEGATIVE_INFINITY</code></li>
+ * </ul>
  *
  * @author pwalser
  * @since 03.09.2017.
@@ -18,9 +35,9 @@ public final class CheckNumber {
     /**
      * Check that the number is an actual number (not infinity, not NaN).
      *
-     * @return validator
+     * @return verifier
      */
-    public static Consumer<Number> finite() {
+    public static Verifier<Number> finite() {
         return value -> {
             if (value instanceof Float) {
                 if (!Float.isFinite((Float) value)) {
@@ -38,9 +55,9 @@ public final class CheckNumber {
      * Check that the number is not smaller than 'min'
      *
      * @param min minimum
-     * @return validator
+     * @return verifier
      */
-    public static Consumer<Number> min(Number min) {
+    public static Verifier<Number> min(Number min) {
         if (isNaN(min) || isNegativeInfinity(min)) {
             return value -> {
             };
@@ -64,9 +81,9 @@ public final class CheckNumber {
      * Check that the number is not larger than 'max'
      *
      * @param max maximum
-     * @return validator
+     * @return verifier
      */
-    public static Consumer<Number> max(Number max) {
+    public static Verifier<Number> max(Number max) {
         if (isNaN(max) || isPositiveInfinity(max)) {
             return value -> {
             };
@@ -90,9 +107,9 @@ public final class CheckNumber {
      * Check that the number less than a given value
      *
      * @param n value to compare against
-     * @return validator
+     * @return verifier
      */
-    public static Consumer<Number> lessThan(Number n) {
+    public static Verifier<Number> lessThan(Number n) {
         if (isNaN(n) || isPositiveInfinity(n)) {
             return value -> {
             };
@@ -114,9 +131,9 @@ public final class CheckNumber {
      * Check that the number greater than a given value
      *
      * @param n value to compare against
-     * @return validator
+     * @return verifier
      */
-    public static Consumer<Number> greaterThan(Number n) {
+    public static Verifier<Number> greaterThan(Number n) {
         if (isNaN(n) || isNegativeInfinity(n)) {
             return value -> {
             };

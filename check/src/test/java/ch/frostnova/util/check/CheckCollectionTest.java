@@ -23,6 +23,10 @@ public class CheckCollectionTest {
         CheckTest.checkOk(new HashSet(Arrays.asList(1, 2, 3)), notEmpty());
         CheckTest.checkFail(new HashSet(), notEmpty());
         CheckTest.checkFail(Collections.emptySet(), notEmpty());
+
+
+        Verifier<List> c = Check.that(l -> l.isEmpty(), "foo");
+        CheckTest.checkFail(Collections.emptyList(), notEmpty(), c);
     }
 
     @Test

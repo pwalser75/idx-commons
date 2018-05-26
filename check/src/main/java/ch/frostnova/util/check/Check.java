@@ -1,6 +1,5 @@
 package ch.frostnova.util.check;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -34,14 +33,14 @@ import java.util.function.Predicate;
  * <br>
  * <b>Custom checks</b> can be created by checking with:
  * <ul>
- * <li>any <code>Consumer&lt;T&gt;</code> (check the value and throw any Exception when the check fails)</li>
+ * <li>any <code>Verifier&lt;T&gt;</code> (check the value and throw any Exception when the check fails)</li>
  * <li>a <code>Predicate&lt;T&gt;</code> and a message (or message supplier)</li>
  * </ul>
  * <p>
  * Examples for custom validation:
  * <ul>
- * <li>Consumer check: a (zoned) date must be in the future<br>
- * <pre><code>   Consumer&lt;ZonedDateTime&gt; futureDate = d -&gt; {
+ * <li>Verifier check: a (zoned) date must be in the future<br>
+ * <pre><code>   Verifier&lt;ZonedDateTime&gt; futureDate = d -&gt; {
  *     if (!d.isAfter(ZonedDateTime.now())) {
  *         throw new IllegalArgumentException("must be in the future");
  *     }
@@ -54,7 +53,7 @@ import java.util.function.Predicate;
  * Predicate&lt;String&gt; passwordRule = hasUppercaseLetters.and(hasLowercaseLetters.and(hasDigits));<br>
  * String message = "must contain lower/uppercase characters and digits";<br>
  * <br>
- * Check.required(pwd, "password", Check.is(passwordRule, message), CheckString.min(6));</code>
+ * Check.required(pwd, "password", Check.that(passwordRule, message), CheckString.min(6));</code>
  * </li>
  * </ul>
  *
@@ -74,9 +73,9 @@ public final class Check {
      * @param predicate            predicate to check, required
      * @param errorMessageProducer error message producer, required
      * @param <T>                  generic value type
-     * @return validator
+     * @return verifier
      */
-    public static <T> Consumer<T> is(Predicate<? super T> predicate, Function<T, String> errorMessageProducer) {
+    public static <T> Verifier<T> that(Predicate<? super T> predicate, Function<T, String> errorMessageProducer) {
         Check.required(predicate, "predicate");
         Check.required(errorMessageProducer, "error message producer");
         return value -> {
@@ -93,21 +92,21 @@ public final class Check {
      * @param predicate    predicate to check, required
      * @param errorMessage error message, required
      * @param <T>          generic value type
-     * @return validator
+     * @return verifier
      */
-    public static <T> Consumer<T> is(Predicate<? super T> predicate, String errorMessage) {
-        return is(predicate, value -> errorMessage);
+    public static <T> Verifier<T> that(Predicate<? super T> predicate, String errorMessage) {
+        return that(predicate, value -> errorMessage);
     }
 
     /**
      * Perform checks on an optional value. If the value is null, it is accepted (as being optional); only when the
-     * value is present, the validators are called for further verification. If any of the validations fail (by
+     * value is present, the verifiers are called for further verification. If any of the validations fail (by
      * throwing any exception), an {@link IllegalArgumentException} will be thrown, including the parameter name an
      * error message.
      *
      * @param value         value to be checked
      * @param parameterName parameter name of the value (will be included in the error message)
-     * @param validators    optional validators which perform checks on the value (only called when the value is not
+     * @param verifiers     optional verifiers which perform checks on the value (only called when the value is not
      *                      null), and throw any {@link Exception} (will be converted to an {@link
      *                      IllegalArgumentException}
      *                      is the same message) when the validation fails.
@@ -115,19 +114,19 @@ public final class Check {
      * @return value that was passed.
      */
     @SafeVarargs
-    public static <T> T optional(T value, String parameterName, Consumer<? super T>... validators) {
-        return value == null ? null : required(value, parameterName, validators);
+    public static <T> T optional(T value, String parameterName, Verifier<? super T>... verifiers) {
+        return value == null ? null : required(value, parameterName, verifiers);
     }
 
     /**
-     * Perform checks on a required value (must not be null). The validators are called for further verification, if the
+     * Perform checks on a required value (must not be null). The verifiers are called for further verification, if the
      * value is not already null. If any of the validations fail (by
      * throwing any exception), an {@link IllegalArgumentException} will be thrown, including the parameter name an
      * error message.
      *
      * @param value         value to be checked
      * @param parameterName parameter name of the value (will be included in the error message)
-     * @param validators    optional validators which perform checks on the value (only called when the value is not
+     * @param verifiers     optional verifiers which perform checks on the value (only called when the value is not
      *                      null), and throw any {@link Exception} (will be converted to an {@link
      *                      IllegalArgumentException}
      *                      is the same message) when the validation fails.
@@ -135,14 +134,14 @@ public final class Check {
      * @return value that was passed.
      */
     @SafeVarargs
-    public static <T> T required(T value, String parameterName, Consumer<? super T>... validators) {
+    public static <T> T required(T value, String parameterName, Verifier<? super T>... verifiers) {
         if (value == null) {
             throw new IllegalArgumentException(name(parameterName) + " is required");
         }
-        if (validators != null) {
-            for (Consumer<? super T> validator : validators) {
+        if (verifiers != null) {
+            for (Verifier<? super T> verifier : verifiers) {
                 try {
-                    validator.accept(value);
+                    verifier.check(value);
                 } catch (Exception ex) {
                     String message = ex.getMessage() != null ? ex.getMessage() : "unknown reason";
                     throw new IllegalArgumentException(name(parameterName) + " " + message, ex);
