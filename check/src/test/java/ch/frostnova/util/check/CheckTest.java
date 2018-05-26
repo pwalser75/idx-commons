@@ -54,10 +54,10 @@ public class CheckTest {
         Predicate<String> passwordRule = hasUppercaseLetters.and(hasLowercaseLetters.and(hasDigits));
         String message = "must contain lower/uppercase characters and digits";
 
-        Check.required("ThePassword123", "password", Check.with(passwordRule, message), CheckString.min(6));
+        Check.required("ThePassword123", "password", Check.is(passwordRule, message), CheckString.min(6));
 
         try {
-            Check.required("foo", "password", Check.with(passwordRule, message), CheckString.min(6));
+            Check.required("foo", "password", Check.is(passwordRule, message), CheckString.min(6));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains(message));
@@ -68,11 +68,11 @@ public class CheckTest {
     public void checkWithPredicate2() {
 
         Check.required(1234, "number",
-                Check.with(i -> (i.intValue() & 1) == 0, "must be even"));
+                Check.is(i -> (i.intValue() & 1) == 0, "must be even"));
 
         try {
             Check.required(5555, "number",
-                    Check.with(i -> (i.intValue() & 1) == 0, "must be even"));
+                    Check.is(i -> (i.intValue() & 1) == 0, "must be even"));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains("must be even"));
@@ -83,11 +83,11 @@ public class CheckTest {
     public void checkWithPredicateAndDynamicFunction1() {
 
         Check.required(LocalDate.of(1975, 12, 20), "date",
-                Check.with(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
+                Check.is(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
 
         try {
             Check.required(LocalDate.of(2020, 2, 20), "date",
-                    Check.with(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
+                    Check.is(d -> d.getDayOfWeek() == DayOfWeek.SATURDAY, v -> v + " is not a saturday"));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains("2020-02-20 is not a saturday"));
@@ -98,11 +98,11 @@ public class CheckTest {
     public void checkWithPredicateAndDynamicFunction2() {
 
         Check.required(1234, "number",
-                Check.with(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
+                Check.is(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
 
         try {
             Check.required(5555, "number",
-                    Check.with(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
+                    Check.is(i -> (i.intValue() & 1) == 0, v -> v + " must be even"));
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
             Assert.assertTrue(ex.getMessage().contains("5555 must be even"));
@@ -122,18 +122,23 @@ public class CheckTest {
     }
 
     public static <T> void checkOk(T value, Consumer<? super T>... validators) {
-        String parameterName = UUID.randomUUID().toString();
-        T result = Check.required(value, parameterName, validators);
-        Assert.assertEquals(value, result);
+        String parameterName = "Test value: " + value;
+        try {
+            T result = Check.required(value, parameterName, validators);
+            Assert.assertEquals(value, result);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+            throw ex;
+        }
     }
 
     public static <T> void checkFail(T value, Consumer<? super T>... validators) {
-        String parameterName = UUID.randomUUID().toString();
+        String parameterName = "Test value: " + value;
         try {
             Check.required(value, parameterName, validators);
             Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
         } catch (IllegalArgumentException ex) {
-            System.out.println(value + " => " + ex.getMessage());
+            System.out.println(ex.getMessage());
             Assert.assertTrue(ex.getMessage().contains("'" + parameterName + "'"));
         }
     }

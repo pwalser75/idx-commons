@@ -16,7 +16,16 @@ public final class Check {
         // static access only
     }
 
-    public static <T> Consumer<T> with(Predicate<? super T> predicate, Function<T, String> errorMessageProducer) {
+    /**
+     * Check the given predicate on the given value. If the predicate evaluates to <code>false</code>,
+     * produce am {@link IllegalArgumentException} with the message from the given error message producer.
+     *
+     * @param predicate            predicate to check, required
+     * @param errorMessageProducer error message producer, required
+     * @param <T>                  generic value type
+     * @return validator
+     */
+    public static <T> Consumer<T> is(Predicate<? super T> predicate, Function<T, String> errorMessageProducer) {
         Check.required(predicate, "predicate");
         Check.required(errorMessageProducer, "error message producer");
         return value -> {
@@ -26,8 +35,17 @@ public final class Check {
         };
     }
 
-    public static <T> Consumer<T> with(Predicate<? super T> predicate, String errorMessage) {
-        return with(predicate, value -> errorMessage);
+    /**
+     * Check the given predicate on the given value. If the predicate evaluates to <code>false</code>,
+     * produce am {@link IllegalArgumentException} with the given error message.
+     *
+     * @param predicate    predicate to check, required
+     * @param errorMessage error message, required
+     * @param <T>          generic value type
+     * @return validator
+     */
+    public static <T> Consumer<T> is(Predicate<? super T> predicate, String errorMessage) {
+        return is(predicate, value -> errorMessage);
     }
 
     /**
@@ -41,7 +59,7 @@ public final class Check {
      * @param validators    optional validators which perform checks on the value (only called when the value is not
      *                      null), and throw any {@link Exception} (will be converted to an {@link
      *                      IllegalArgumentException}
-     *                      with the same message) when the validation fails.
+     *                      is the same message) when the validation fails.
      * @param <T>           value type
      * @return value that was passed.
      */
@@ -61,7 +79,7 @@ public final class Check {
      * @param validators    optional validators which perform checks on the value (only called when the value is not
      *                      null), and throw any {@link Exception} (will be converted to an {@link
      *                      IllegalArgumentException}
-     *                      with the same message) when the validation fails.
+     *                      is the same message) when the validation fails.
      * @param <T>           value type
      * @return value that was passed.
      */
@@ -76,7 +94,7 @@ public final class Check {
                     validator.accept(value);
                 } catch (Exception ex) {
                     String message = ex.getMessage() != null ? ex.getMessage() : "unknown reason";
-                    throw new IllegalArgumentException(name(parameterName) + " " + message);
+                    throw new IllegalArgumentException(name(parameterName) + " " + message, ex);
                 }
             }
         }

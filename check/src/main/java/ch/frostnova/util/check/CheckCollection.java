@@ -22,7 +22,7 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> notEmpty() {
-        return Check.with(c -> !c.isEmpty(), "must not be empty");
+        return Check.is(c -> !c.isEmpty(), "must not be empty");
     }
 
     /**
@@ -31,7 +31,7 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> noNullElements() {
-        return Check.with(c -> !c.stream().anyMatch(Objects::isNull), "must not be empty");
+        return Check.is(c -> !c.stream().anyMatch(Objects::isNull), "must not be empty");
     }
 
     /**
@@ -41,7 +41,7 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> min(int min) {
-        return Check.with(v -> v.size() >= min, "must have at least " + min + " elements");
+        return Check.is(v -> v.size() >= min, "must have at least " + min + " elements");
     }
 
     /**
@@ -51,6 +51,6 @@ public final class CheckCollection {
      * @return validator
      */
     public static Consumer<Collection> max(int max) {
-        return Check.with(v -> v.size() <= max, "must have no more than " + max + " elements");
+        return Check.is(v -> v.size() <= max, "must have no more than " + max + " elements");
     }
 }

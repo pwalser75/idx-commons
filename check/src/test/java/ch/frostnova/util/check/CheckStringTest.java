@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.regex.Pattern;
 
+import static ch.frostnova.util.check.CheckString.*;
+
 /**
  * Test for {@link CheckString}
  *
@@ -14,20 +16,20 @@ public class CheckStringTest {
 
     @Test
     public void checkNotEmpty() {
-        CheckTest.checkOk("Test", CheckString.notEmpty());
-        CheckTest.checkOk("  ", CheckString.notEmpty());
-        CheckTest.checkOk("\t", CheckString.notEmpty());
-        CheckTest.checkFail("", CheckString.notEmpty());
+        CheckTest.checkOk("Test", notEmpty());
+        CheckTest.checkOk("  ", notEmpty());
+        CheckTest.checkOk("\t", notEmpty());
+        CheckTest.checkFail("", notEmpty());
     }
 
     @Test
     public void checkFormat() {
         final Pattern format = Pattern.compile("\\w+-[0-9]+");
-        CheckTest.checkOk("Test-123", CheckString.format(format));
-        CheckTest.checkOk("K-2", CheckString.format(format));
-        CheckTest.checkFail("123-Test", CheckString.format(format));
-        CheckTest.checkFail("Foo", CheckString.format(format));
-        CheckTest.checkFail("x=123", CheckString.format(format));
+        CheckTest.checkOk("Test-123", format(format));
+        CheckTest.checkOk("K-2", format(format));
+        CheckTest.checkFail("123-Test", format(format));
+        CheckTest.checkFail("Foo", format(format));
+        CheckTest.checkFail("x=123", format(format));
     }
 
     @Test
@@ -35,35 +37,35 @@ public class CheckStringTest {
         final Pattern format = Pattern.compile("[0-9]{4}-[0-1][0-9]?-[0-3][0-9]?");
         String hint = "expected: yyyy-MM-dd";
 
-        CheckTest.checkOk("1975-12-20", CheckString.format(format, hint));
-        CheckTest.checkOk("2017-09-04", CheckString.format(format, hint));
-        CheckTest.checkFail("5555", CheckString.format(format, hint));
-        CheckTest.checkFail("Foo", CheckString.format(format, hint));
-        CheckTest.checkFail("2000-47-99", CheckString.format(format, hint));
+        CheckTest.checkOk("1975-12-20", format(format, hint));
+        CheckTest.checkOk("2017-09-04", format(format, hint));
+        CheckTest.checkFail("5555", format(format, hint));
+        CheckTest.checkFail("Foo", format(format, hint));
+        CheckTest.checkFail("2000-47-99", format(format, hint));
     }
 
     @Test
     public void checkNotBlank() {
-        CheckTest.checkOk("?", CheckString.notBlank());
-        CheckTest.checkOk("Test", CheckString.notBlank());
-        CheckTest.checkFail("", CheckString.notBlank());
-        CheckTest.checkFail("  ", CheckString.notBlank());
-        CheckTest.checkFail(" \t\r\n", CheckString.notBlank());
+        CheckTest.checkOk("?", notBlank());
+        CheckTest.checkOk("Test", notBlank());
+        CheckTest.checkFail("", notBlank());
+        CheckTest.checkFail("  ", notBlank());
+        CheckTest.checkFail(" \t\r\n", notBlank());
     }
 
     @Test
     public void checkMin() {
-        CheckTest.checkOk("123", CheckString.min(3));
-        CheckTest.checkOk("Aloha", CheckString.min(3));
-        CheckTest.checkFail("X", CheckString.min(3));
-        CheckTest.checkFail("", CheckString.min(3));
+        CheckTest.checkOk("123", min(3));
+        CheckTest.checkOk("Aloha", min(3));
+        CheckTest.checkFail("X", min(3));
+        CheckTest.checkFail("", min(3));
     }
 
     @Test
     public void checkMax() {
-        CheckTest.checkOk("123", CheckString.max(3));
-        CheckTest.checkOk("X", CheckString.max(3));
-        CheckTest.checkOk("", CheckString.max(3));
-        CheckTest.checkFail("Aloha", CheckString.max(3));
+        CheckTest.checkOk("123", max(3));
+        CheckTest.checkOk("X", max(3));
+        CheckTest.checkOk("", max(3));
+        CheckTest.checkFail("Aloha", max(3));
     }
 }

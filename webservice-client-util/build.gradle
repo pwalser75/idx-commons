@@ -1,5 +1,0 @@
-description = 'WebServie Client Util'
-dependencies {
-    compile libs.jaxrs
-    testCompile libs.testbase
-}

@@ -17,7 +17,7 @@ public final class CheckString {
 
 
     /**
-     * Check that the string is not empty (string with no characters)
+     * Check that the string is not empty (string is no characters)
      *
      * @return validator
      */
@@ -31,7 +31,7 @@ public final class CheckString {
     }
 
     /**
-     * Check that the string is not empty (string with whitespace characters only)
+     * Check that the string is not empty (string is whitespace characters only)
      *
      * @return validator
      */

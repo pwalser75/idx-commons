@@ -1,8 +1,0 @@
-description = 'Caching Util'
-dependencies {
-    compileOnly libs.jee
-    compile libs.jcache
-    compile libs.loggingAPI
-    testCompile libs.jeeTestbase
-    testCompile libs.testbase
-}
