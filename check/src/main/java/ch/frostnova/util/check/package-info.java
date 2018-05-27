@@ -41,13 +41,13 @@
  * <ul>
  * <li>Verify that a (zoned) date must be in the future<br>
  * <pre><code>   Verify&lt;ZonedDateTime&gt; futureDate = d -&gt; {
- *     if (!d.isAfter(ZonedDateTime.now())) {
- *         throw new IllegalArgumentException("must be in the future");
- *     }
+ *   if (!d.isAfter(ZonedDateTime.now())) {
+ *     throw new IllegalArgumentException("must be in the future");
+ *   }
  * };
  * Check.required(date, "execution date", futureDate);</code></pre>
- * or <pre><code>Check.required(date, "execution date",
- *   Verify.that(d -&gt; !d.isAfter(ZonedDateTime.now()), "must be in the future"));</code></pre>
+ * or <pre><code>   Check.required(date, "execution date",
+ *     Verify.that(d -&gt; !d.isAfter(ZonedDateTime.now()), "must be in the future"));</code></pre>
  * </ul>
  *
  * @author pwalser
