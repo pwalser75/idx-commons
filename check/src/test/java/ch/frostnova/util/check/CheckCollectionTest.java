@@ -24,8 +24,7 @@ public class CheckCollectionTest {
         CheckTest.checkFail(new HashSet(), notEmpty());
         CheckTest.checkFail(Collections.emptySet(), notEmpty());
 
-
-        Verifier<List> c = Check.that(l -> l.isEmpty(), "foo");
+        Verify<List> c = Verify.that(l -> l.isEmpty(), "foo");
         CheckTest.checkFail(Collections.emptyList(), notEmpty(), c);
     }
 

@@ -20,8 +20,8 @@ public final class CheckCollection {
      *
      * @return verifier
      */
-    public static Verifier<Collection> notEmpty() {
-        return Check.that(c -> !c.isEmpty(), "must not be empty");
+    public static Verify<Collection> notEmpty() {
+        return Verify.that(c -> !c.isEmpty(), "must not be empty");
     }
 
     /**
@@ -29,8 +29,8 @@ public final class CheckCollection {
      *
      * @return verifier
      */
-    public static Verifier<Collection> noNullElements() {
-        return Check.that(c -> c.stream().noneMatch(Objects::isNull), "must not be empty");
+    public static Verify<Collection> noNullElements() {
+        return Verify.that(c -> c.stream().noneMatch(Objects::isNull), "must not be empty");
     }
 
     /**
@@ -39,8 +39,8 @@ public final class CheckCollection {
      * @param min minimum
      * @return verifier
      */
-    public static Verifier<Collection> min(int min) {
-        return Check.that(v -> v.size() >= min, "must have at least " + min + " elements");
+    public static Verify<Collection> min(int min) {
+        return Verify.that(v -> v.size() >= min, "must have at least " + min + " elements");
     }
 
     /**
@@ -49,7 +49,7 @@ public final class CheckCollection {
      * @param max maximum
      * @return verifier
      */
-    public static Verifier<Collection> max(int max) {
-        return Check.that(v -> v.size() <= max, "must have no more than " + max + " elements");
+    public static Verify<Collection> max(int max) {
+        return Verify.that(v -> v.size() <= max, "must have no more than " + max + " elements");
     }
 }

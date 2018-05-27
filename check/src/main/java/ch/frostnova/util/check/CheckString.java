@@ -10,17 +10,18 @@ import java.util.regex.Pattern;
  */
 public final class CheckString {
 
+    private final static Pattern SINGLE_WORD = Pattern.compile("\\p{IsAlphabetic}+");
+
     private CheckString() {
         // static access only
     }
-
 
     /**
      * Check that the string is not empty (string is no characters)
      *
      * @return verifier
      */
-    public static Verifier<String> notEmpty() {
+    public static Verify<String> notEmpty() {
 
         return value -> {
             if (value.length() == 0) {
@@ -34,7 +35,7 @@ public final class CheckString {
      *
      * @return verifier
      */
-    public static Verifier<String> notBlank() {
+    public static Verify<String> notBlank() {
 
         return value -> {
             if (value.trim().length() == 0) {
@@ -49,7 +50,7 @@ public final class CheckString {
      * @param pattern pattern specifying the string's format
      * @return verifier
      */
-    public static Verifier<String> format(String pattern) {
+    public static Verify<String> format(String pattern) {
         return format(Pattern.compile(pattern));
     }
 
@@ -59,7 +60,7 @@ public final class CheckString {
      * @param pattern pattern specifying the string's format
      * @return verifier
      */
-    public static Verifier<String> format(Pattern pattern) {
+    public static Verify<String> format(Pattern pattern) {
         return format(pattern, null);
     }
 
@@ -70,7 +71,7 @@ public final class CheckString {
      * @param hint    hint describing the pattern
      * @return verifier
      */
-    public static Verifier<String> format(Pattern pattern, String hint) {
+    public static Verify<String> format(Pattern pattern, String hint) {
         return value -> {
             if (pattern != null && !pattern.matcher(value).matches()) {
                 StringBuilder builder = new StringBuilder();
@@ -92,7 +93,7 @@ public final class CheckString {
      * @param hint    hint describing the pattern
      * @return verifier
      */
-    public static Verifier<String> format(String pattern, String hint) {
+    public static Verify<String> format(String pattern, String hint) {
         return format(Pattern.compile(pattern), hint);
     }
 
@@ -102,7 +103,7 @@ public final class CheckString {
      * @param min minimum number of characters
      * @return verifier
      */
-    public static Verifier<String> min(int min) {
+    public static Verify<String> min(int min) {
 
         return value -> {
             if (value.length() < min) {
@@ -117,12 +118,22 @@ public final class CheckString {
      * @param max maximum number of characters
      * @return verifier
      */
-    public static Verifier<String> max(int max) {
+    public static Verify<String> max(int max) {
 
         return value -> {
             if (value.length() > max) {
                 throw new IllegalArgumentException("must have no more than " + max + " characters");
             }
         };
+    }
+
+    /**
+     * Check that the string is a single word (nontrivial sequence of alphabetic characters).
+     *
+     * @return verifier
+     */
+    public static Verify<String> singleWord() {
+        return Verify.that(s -> SINGLE_WORD.matcher(s).matches(), "must be a single word");
+
     }
 }

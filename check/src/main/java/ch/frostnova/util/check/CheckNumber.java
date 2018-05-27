@@ -37,7 +37,7 @@ public final class CheckNumber {
      *
      * @return verifier
      */
-    public static Verifier<Number> finite() {
+    public static Verify<Number> finite() {
         return value -> {
             if (value instanceof Float) {
                 if (!Float.isFinite((Float) value)) {
@@ -57,7 +57,7 @@ public final class CheckNumber {
      * @param min minimum
      * @return verifier
      */
-    public static Verifier<Number> min(Number min) {
+    public static Verify<Number> min(Number min) {
         if (isNaN(min) || isNegativeInfinity(min)) {
             return value -> {
             };
@@ -83,7 +83,7 @@ public final class CheckNumber {
      * @param max maximum
      * @return verifier
      */
-    public static Verifier<Number> max(Number max) {
+    public static Verify<Number> max(Number max) {
         if (isNaN(max) || isPositiveInfinity(max)) {
             return value -> {
             };
@@ -109,7 +109,7 @@ public final class CheckNumber {
      * @param n value to compare against
      * @return verifier
      */
-    public static Verifier<Number> lessThan(Number n) {
+    public static Verify<Number> lessThan(Number n) {
         if (isNaN(n) || isPositiveInfinity(n)) {
             return value -> {
             };
@@ -133,7 +133,7 @@ public final class CheckNumber {
      * @param n value to compare against
      * @return verifier
      */
-    public static Verifier<Number> greaterThan(Number n) {
+    public static Verify<Number> greaterThan(Number n) {
         if (isNaN(n) || isNegativeInfinity(n)) {
             return value -> {
             };

@@ -90,4 +90,20 @@ public class CheckStringTest {
         CheckTest.checkOk("", max(3));
         CheckTest.checkFail("Aloha", max(3));
     }
+
+    @Test
+    public void checkSingleWord() {
+        CheckTest.checkOk("a", singleWord());
+        CheckTest.checkOk("abc", singleWord());
+        CheckTest.checkOk("Kräuterwürze", singleWord());
+        CheckTest.checkOk("Désenchantée", singleWord());
+
+        CheckTest.checkFail("", singleWord());
+        CheckTest.checkFail("#@!&", singleWord());
+        CheckTest.checkFail("123", singleWord());
+        CheckTest.checkFail("42foo", singleWord());
+        CheckTest.checkFail("two words", singleWord());
+        CheckTest.checkFail("what?", singleWord());
+        CheckTest.checkFail(" spaces ", singleWord());
+    }
 }
