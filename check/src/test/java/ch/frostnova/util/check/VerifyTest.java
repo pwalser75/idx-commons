@@ -35,6 +35,25 @@ public class VerifyTest {
     }
 
     @Test
+    public void checkChainVerify() {
+
+        Verify<String> hasUppercaseLetters = Verify.that(s -> s.chars().anyMatch(Character::isUpperCase), "must contain uppercase letter(s)");
+        Verify<String> hasLowercaseLetters = Verify.that(s -> s.chars().anyMatch(Character::isLowerCase), "must contain lowercase letter(s)");
+        Verify<String> hasDigits = Verify.that(s -> s.chars().anyMatch(Character::isDigit), "must contain digit(s)");
+        Verify<String> atLeast6Characters = CheckString.min(6);
+        Verify<String> passwordRule = hasUppercaseLetters.and(hasLowercaseLetters).and(hasDigits).and(atLeast6Characters);
+
+        Check.required("ThePassword123", "password", passwordRule);
+
+        try {
+            Check.required("Foo", "password", passwordRule, CheckString.min(6));
+            Assert.fail("Expected: " + IllegalArgumentException.class.getSimpleName());
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test
     public void checkWithPredicate2() {
 
         Check.required(1234, "number",

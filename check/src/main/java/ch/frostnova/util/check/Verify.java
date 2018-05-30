@@ -17,8 +17,25 @@ public interface Verify<T> {
      * the value does not match the criteria of this verifier.
      *
      * @param value value to check, never null
+     * @throws Exception any exception whose message indicates why the value does not match
      */
     void check(T value) throws Exception;
+
+    /**
+     * Chain the verify with another verify
+     *
+     * @param next next verify
+     * @return chained verify
+     */
+    default Verify<T> and(Verify<T> next) {
+        if (next == null) {
+            return this;
+        }
+        return value -> {
+            check(value);
+            next.check(value);
+        };
+    }
 
     /**
      * Create a verifier based on a predicate and message. Upon checking, the predicate
