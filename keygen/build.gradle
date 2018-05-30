@@ -1,7 +1,7 @@
 description = 'Key Generator'
 dependencies {
     testCompile libs.testbase
-    compile project(':check')
+    compile libs.frostnova.check
 }
 
 jar {
