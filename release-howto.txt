@@ -49,3 +49,11 @@ A) Releasing versions
    
 7. If the checks are ok, you can 'Release' the staging repository (action in the toolbar).
    This will move the artefacts to the release repository, where it will be synched with the centeral repository.
+
+8. Commit and tag the release version
+   git add .
+   git commit -m "Release version x.y.z"
+   git tag -a x.y.z -m "Release version x.y.z"
+
+9. Change the version back to SNAPSHOT (next version after release, same version for RC)
+   Commit the change (GIT).
